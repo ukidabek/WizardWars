@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 83cdb6fd3ed1d8b47928c91ed81962e7, type: 3}
-  m_Name: NewSpell
+  m_Name: Fireball
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 93ed200d6b0e7f843b545c36a668c28b, type: 3}
   castTime: 1
   cost: 5
-  spellObject: {fileID: 0}
+  spellObject: {fileID: 6446548090765134275, guid: 6a95bb92463c9814e8804c09e77aa595,
+    type: 3}
