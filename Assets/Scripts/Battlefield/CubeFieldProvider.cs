@@ -7,14 +7,22 @@ namespace Battlefield
 
         private GameObject Create()
         {
+            // Parent object.
             var gameObject = new GameObject("Field", typeof(Field));
-            var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            cube.transform.SetParent(gameObject.transform);
-            cube.transform.localPosition = Vector3.one * .5f;
-            Destroy(cube.GetComponent<Collider>());
-            var box = gameObject.AddComponent<BoxCollider>();
-            box.isTrigger = true;
-            box.ClosestPoint(Vector3.one * .5f);
+
+            // child
+            var quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            quad.transform.localRotation = Quaternion.Euler(90, 0, 0);
+            quad.transform.SetParent(gameObject.transform);
+            quad.transform.localPosition = new Vector3(.5f, .01f, .5f);
+            Destroy(quad.GetComponent<Collider>());
+
+            gameObject.GetComponent<Field>().FieldTransfomr = quad.transform;
+
+            //  Collider
+            var boxCollider = gameObject.AddComponent<BoxCollider>();
+            boxCollider.isTrigger = true;
+            boxCollider.center = Vector3.one * .5f;
             return gameObject;
         }
     }

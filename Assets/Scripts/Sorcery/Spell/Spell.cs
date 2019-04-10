@@ -15,6 +15,9 @@ namespace Sorcery.Spells
         [SerializeField] private float castTime = 1f;
         public float CastTime { get => castTime; }
 
+        [SerializeField] private float cooldwonTime = 1f;
+        public float CooldwonTime { get => cooldwonTime; }
+
         [SerializeField] private float cost = 5f;
         public float Cost { get => cost; }
 
