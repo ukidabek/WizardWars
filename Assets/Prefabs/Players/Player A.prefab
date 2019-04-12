@@ -131,7 +131,6 @@ MonoBehaviour:
     AvatarID: ToonRTS_demo_Knight
   spellBook: {fileID: 6671726768229202857}
   hand: {fileID: 6671726768229202854}
-  avatar: {fileID: 457350730}
   CastStart:
     m_PersistentCalls:
       m_Calls:
@@ -195,6 +194,11 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: CooldownUpdateEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  PlayerInfoUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: PlayerInfoUpdated, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
 --- !u!114 &6671726768229202854
 MonoBehaviour:
