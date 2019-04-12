@@ -13,7 +13,11 @@ namespace Commands
         {
             if(commands.Count > 0)
                 while(commands.Count > 0)
-                    commands.Dequeue().Execute();
+                {
+                    var command = commands.Dequeue();
+                    Debug.LogFormat("Command type of {0} executed.", command.GetType().Name);
+                    command.Execute();
+                }
         }
 
         public void EnqueueCommand(Command command)

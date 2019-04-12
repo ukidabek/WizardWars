@@ -32,6 +32,7 @@ public class SpellButtonController : MonoBehaviour
         get => coolDownInage.fillAmount;
         set => coolDownInage.fillAmount = value;
     }
+    public bool Interactable { get => button.interactable; set => button.interactable = value; }
 
     private void Awake()
     {

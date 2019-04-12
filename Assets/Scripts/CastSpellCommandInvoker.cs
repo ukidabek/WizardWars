@@ -1,18 +1,19 @@
 ﻿using Commands;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CastSpellCommand : Command
 {
-    private Player player = null;
+    private int name = 0;
     private int index = 0;
     private Vector3 positon = Vector3.zero;
     private Quaternion rotation = Quaternion.identity;
 
-    public CastSpellCommand(Player player, int index, Vector3 positon, Quaternion rotation)
+    public CastSpellCommand(int player, int index, Vector3 positon, Quaternion rotation)
     {
-        this.player = player;
+        this.name = player;
         this.index = index;
         this.positon = positon;
         this.rotation = rotation;
@@ -20,7 +21,7 @@ public class CastSpellCommand : Command
 
     public override void Execute()
     {
-        player.CastSpell(index, positon, rotation);
+        Player.Get((Player.ID)name)?.CastSpell(index, positon, rotation);
     }
 }
 
@@ -32,7 +33,7 @@ public class CastSpellCommandInvoker : CommandInvoker
     [SerializeField] private Vector3 position = Vector3.zero;
     [SerializeField] private Vector3 rotation = Vector3.zero;
 
-    protected override Command Command => new CastSpellCommand(player, index, position, Quaternion.Euler(rotation));
+    protected override Command Command => new CastSpellCommand((int)player.Id, index, position, Quaternion.Euler(rotation));
 
     private void Start()
     {

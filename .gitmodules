@@ -1,3 +1,6 @@
 [submodule "Assets/Scripts/DesignPatterns"]
 	path = Assets/Scripts/DesignPatterns
 	url = https://github.com/ukidabek/DesignPatterns.git
+[submodule "Assets/Scripts/Utilities"]
+	path = Assets/Scripts/Utilities
+	url = https://github.com/ukidabek/Utilities.git

@@ -1,5 +1,4 @@
-﻿using BaseGameLogic.Singleton;
-using Sorcery;
+﻿using Sorcery;
 using Sorcery.Spells;
 using System;
 using System.Collections;
@@ -9,41 +8,81 @@ using UnityEngine.Events;
 
 [Serializable] public class UpdateSpellHand : UnityEvent<List<Spell>> { }
 [Serializable] public class CastUpdateEvent : UnityEvent<float> { }
+[Serializable] public class CastNotyfication : UnityEvent<int> { }
 [Serializable] public class CooldownUpdateEvent : UnityEvent<int, float> { }
+[Serializable] public class PlayerInfoUpdated : UnityEvent<Player.PlayerInfo> { }
 
-[RequireComponent(typeof(SpellBook))]
-public class Player : SingletonMonoBehaviour<Player>
+[RequireComponent(typeof(SpellBook), typeof(Hand))]
+public class Player : MonoBehaviour
 {
-    [SerializeField] private SpellBook spellBook = null;
-
-    [SerializeField] private List<Spell> hand = null;
-
-    [Space]
-    public UpdateSpellHand UpdateSpellHand = new UpdateSpellHand();
-    public CastUpdateEvent CastUpdateEvent = new CastUpdateEvent();
-    public CooldownUpdateEvent CooldownUpdateEvent = new CooldownUpdateEvent();
-
-    protected override void Start()
+    public enum ID { A, B };
+    [Serializable]
+    public class PlayerInfo
     {
-        base.Start();
-        UpdateSpellHand.Invoke(hand = spellBook.GetHand());
+        public string Name = string.Empty;
+        public string AvatarID = string.Empty; 
     }
 
-    protected override void Reset()
+    private static Dictionary<ID, Player> players = new Dictionary<ID, Player>();
+    public static Player Get(ID name)
     {
-        base.Reset();
-        spellBook = GetComponent<SpellBook>();
+        Player player = null;
+        players.TryGetValue(name, out player);
+        return player;
+    }
+
+    [SerializeField] private ID id = ID.A;
+    public ID Id { get => id; }
+
+    [SerializeField] PlayerInfo info = new PlayerInfo();
+
+    [Space]
+    [SerializeField] private SpellBook spellBook = null;
+    [SerializeField] private Hand hand = null;
+
+    [Space]
+    public CastNotyfication CastStart = new CastNotyfication();
+    public CastUpdateEvent CastUpdateEvent = new CastUpdateEvent();
+    public CastNotyfication CastEnd = new CastNotyfication();
+    public CooldownUpdateEvent CooldownUpdateEvent = new CooldownUpdateEvent();
+    public PlayerInfoUpdated PlayerInfoUpdated = new PlayerInfoUpdated();
+
+    private void Awake()
+    {
+        players.Add(id, this);
+    }
+
+    private void OnDestroy()
+    {
+        if (players.ContainsKey(id))
+            players.Remove(id);
+    }
+
+    protected void Start()
+    {
+        hand.Spells = spellBook.GetHand();
+        PlayerInfoUpdated.Invoke(info);
+    }
+
+    protected void Reset()
+    {
+        spellBook = GetComponentInChildren<SpellBook>();
+        hand = GetComponentInChildren<Hand>();
     }
 
     private IEnumerator Cast(Spell spell, Vector3 positon, Quaternion rotation, int index)
     {
+        CastStart.Invoke(index);
         var time = spell.CastTime;
         while ((time -= Time.deltaTime) > 0)
         {
             CastUpdateEvent.Invoke(1 - (time / spell.CastTime));
             yield return null;
         }
-        Instantiate(spell.SpellObject, positon, rotation);
+        var spellInstance = spell.SpellObject;
+        spellInstance.transform.position = positon;
+        spellInstance.transform.rotation = rotation;
+        CastEnd.Invoke(index);
         StartCoroutine(Cooldown(spell, index));
     }
 
@@ -58,7 +97,6 @@ public class Player : SingletonMonoBehaviour<Player>
         CooldownUpdateEvent.Invoke(index, 0);
         spellBook.ReturnSpell(hand[index]);
         hand[index] = spellBook.GetSpell();
-        UpdateSpellHand.Invoke(hand);
     }
 
     public void CastSpell(int index, Vector3 positon, Quaternion rotation)

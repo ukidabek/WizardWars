@@ -21,9 +21,20 @@ public class SpellHandUIController : MonoBehaviour
             buttonControllers[i].ButtonClickedEvent.RemoveAllListeners();
             buttonControllers[i].ButtonClickedEvent.AddListener(() =>
             {
+                Debug.LogFormat("Spell button index of {0} clicked.", index);
                 SelectSpellEvent.Invoke(index);
             });
         }
+    }
+
+    public void OnSpellCasetStart(int i)
+    {
+        buttonControllers[i].Interactable = false;
+    }
+
+    public void OnSpellCasetEnd(int i)
+    {
+        buttonControllers[i].Interactable = true;
     }
 
     public void UpdateSpells(List<Spell> spells)

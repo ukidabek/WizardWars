@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Battlefield
 {
@@ -16,6 +17,10 @@ namespace Battlefield
             get => fieldTransfomr == null ? transform : fieldTransfomr;
             set => fieldTransfomr = value;
         }
+
+        [Space]
+        public UnityEvent OnHoverOn = new UnityEvent();
+        public UnityEvent OnHoverOff = new UnityEvent();
 
         private void Start()
         {
@@ -33,12 +38,12 @@ namespace Battlefield
 
         private void OnMouseEnter()
         {
-            meshRenderer.material.color = Color.red;
+            OnHoverOn.Invoke();
         }
 
         private void OnMouseExit()
         {
-            meshRenderer.material.color = Color.white;
+            OnHoverOff.Invoke();
         }
     }
 }
