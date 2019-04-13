@@ -1,5 +1,49 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6616184719062783534
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8979537809686869920}
+  - component: {fileID: 8737317554126527853}
+  m_Layer: 0
+  m_Name: Collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8979537809686869920
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6616184719062783534}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6671726768229202855}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8737317554126527853
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6616184719062783534}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 10, y: 1, z: 1}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1 &6671726767852792658
 GameObject:
   m_ObjectHideFlags: 0
@@ -56,6 +100,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6671726767907909818}
+  - component: {fileID: 214558407312877334}
   m_Layer: 0
   m_Name: PlayerAvatar
   m_TagString: Untagged
@@ -77,6 +122,21 @@ Transform:
   m_Father: {fileID: 6671726768229202855}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &214558407312877334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6671726767907909819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61bf8efad41d6ee4faab678950f50f1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spot: {fileID: 6671726767907909818}
+  animator: {fileID: 0}
+  castAnimationName: Cast
 --- !u!1 &6671726768229202858
 GameObject:
   m_ObjectHideFlags: 0
@@ -89,7 +149,6 @@ GameObject:
   - component: {fileID: 6671726768229202856}
   - component: {fileID: 6671726768229202854}
   - component: {fileID: 6671726768229202857}
-  - component: {fileID: 457350730}
   m_Layer: 0
   m_Name: Player A
   m_TagString: Untagged
@@ -110,6 +169,7 @@ Transform:
   m_Children:
   - {fileID: 6671726767852792657}
   - {fileID: 6671726767907909818}
+  - {fileID: 8979537809686869920}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -133,42 +193,20 @@ MonoBehaviour:
   hand: {fileID: 6671726768229202854}
   CastStart:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: OnSpellCasetStart
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: CastNotyfication, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      m_Calls: []
+    m_TypeName: PlayerLogic.CastNotyfication, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   CastUpdateEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: set_value
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: CastUpdateEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      m_Calls: []
+    m_TypeName: PlayerLogic.CastUpdateEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   CastEnd:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: OnSpellCasetEnd
-        m_Mode: 0
+      - m_Target: {fileID: 214558407312877334}
+        m_MethodName: Cast
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -177,13 +215,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: CastNotyfication, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    m_TypeName: PlayerLogic.CastNotyfication, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   CooldownUpdateEvent:
     m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: PlayerLogic.CooldownUpdateEvent, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  PlayerInfoUpdated:
+    m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: UpdateButtonCooldown
+      - m_Target: {fileID: 214558407312877334}
+        m_MethodName: Load
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -193,12 +236,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: CooldownUpdateEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-  PlayerInfoUpdated:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: PlayerInfoUpdated, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    m_TypeName: PlayerLogic.PlayerInfoUpdated, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
 --- !u!114 &6671726768229202854
 MonoBehaviour:
@@ -215,19 +253,8 @@ MonoBehaviour:
   spells: []
   UpdateSpellHand:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: UpdateSpells
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UpdateSpellHand, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      m_Calls: []
+    m_TypeName: PlayerLogic.UpdateSpellHand, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
 --- !u!114 &6671726768229202857
 MonoBehaviour:
@@ -262,18 +289,3 @@ MonoBehaviour:
   - Fireball
   - Fireball
   - Fireball
---- !u!114 &457350730
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6671726768229202858}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61bf8efad41d6ee4faab678950f50f1f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spot: {fileID: 6671726767907909818}
-  animator: {fileID: 0}
-  castAnimationName: Cast
