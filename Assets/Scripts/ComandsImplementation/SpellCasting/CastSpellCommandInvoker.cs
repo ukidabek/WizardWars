@@ -11,13 +11,18 @@ public class CastSpellCommandInvoker : CommandInvoker
     [SerializeField] private int index = -1;
     public int Index { get => index; set => index = value; }
     [SerializeField] private Vector3 position = Vector3.zero;
-    [SerializeField] private Vector3 rotation = Vector3.zero;
+    [SerializeField] private Quaternion rotation = Quaternion.identity;
 
-    protected override Command Command => new CastSpellCommand((int)player.Id, index, position, Quaternion.Euler(rotation));
+    protected override Command Command => new CastSpellCommand((int)player.Id, index, position, rotation);
 
     private void Start()
     {
-        Battlefield.Battlefield.Instance.FieldSelectedCallback.AddListener(GetTransform);
+        //Battlefield.Battlefield.Instance.FieldSelectedCallback.AddListener(GetTransform);
+    }
+
+    public void GetBattlefield(Battlefield.Battlefield battlefield)
+    {
+        battlefield.FieldSelectedCallback.AddListener(GetTransform);
     }
 
     public void GetTransform(Transform transform)
@@ -25,6 +30,7 @@ public class CastSpellCommandInvoker : CommandInvoker
         if(index >= 0)
         {
             position = transform.position;
+            rotation = transform.rotation;
             Invoke();
             index = -1;
         }

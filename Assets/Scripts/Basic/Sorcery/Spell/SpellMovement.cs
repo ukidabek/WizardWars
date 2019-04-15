@@ -13,7 +13,7 @@ namespace Sorcery.Spells
         private void OnEnable()
         {
             controlledRigidbody.isKinematic = false;
-            controlledRigidbody.velocity = Vector3.forward * speed;
+            controlledRigidbody.velocity = transform.forward * speed;
         }
 
         private void OnDisable()

@@ -8,4 +8,10 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Scenes/GamePlay.unity
+    guid: 7650392711b3db740a348acd1f6914e7
+  - enabled: 1
+    path: Assets/Scenes/DesertArena.unity
+    guid: a80af716ce28a134c9124de8bdee4bed
   m_configObjects: {}

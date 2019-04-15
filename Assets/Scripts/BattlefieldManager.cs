@@ -5,68 +5,92 @@ using Battlefield;
 using PlayerLogic;
 using BaseGameLogic.Singleton;
 using System;
+using UnityEngine.Events;
 
-
-public class BattlefieldManager : SingletonMonoBehaviour<BattlefieldManager>
+namespace Battlefield
 {
-    private class PlayerSpot
+
+    [Serializable] public class BattleFieldSelectedEvent : UnityEvent<Battlefield> { }
+
+    public class BattlefieldManager : SingletonMonoBehaviour<BattlefieldManager>
     {
-        private Transform transform;
-        private Player.ID id = Player.ID.A;
-
-        public PlayerSpot(Transform transform, Player.ID id)
+        private class PlayerSpot
         {
-            this.transform = transform;
-            this.id = id;
-        }
+            private Transform transform;
+            private Player.ID id = Player.ID.A;
 
-        public void Move(Player player)
-        {
-            if(player.Id == id)
+            public PlayerSpot(Transform transform, Player.ID id)
             {
-                player.transform.position = transform.position;
-                player.transform.rotation = transform.rotation;
+                this.transform = transform;
+                this.id = id;
+            }
+
+            public void Move(Player player)
+            {
+                if (player.Id == id)
+                {
+                    player.transform.position = transform.position;
+                    player.transform.rotation = transform.rotation;
+                }
             }
         }
-    }
 
-    private List<PlayerSpot> playerSpots = new List<PlayerSpot>();
-    private Queue<Player> players = new Queue<Player>();
+        private List<PlayerSpot> playerSpots = new List<PlayerSpot>();
+        private Queue<Player> players = new Queue<Player>();
 
-    protected override void Awake()
-    {
-        base.Awake();
-        Player.OnPlayerAdded += OnPlayerAdd;
-        StartCoroutine(MovePlayerCoroutine());
-    }
+        public BattleFieldSelectedEvent battleFieldSelected = new BattleFieldSelectedEvent();
 
-    private void OnPlayerAdd(Player player)
-    {
-        players.Enqueue(player);
-    }
-
-    private IEnumerator MovePlayerCoroutine()
-    {
-        yield return new WaitForEndOfFrame();
-        while(players.Count > 0)
+        protected override void Awake()
         {
-            var player = players.Dequeue();
-            foreach (var spot in playerSpots)
-                spot.Move(player);
+            base.Awake();
+            Player.OnPlayerAdded += OnPlayerAdd;
+            StartCoroutine(MovePlayerCoroutine());
         }
-    }
 
-    internal void PositionBattlefield(Transform transform)
-    {
-        if (Battlefield.Battlefield.Instance != null)
+        private void OnPlayerAdd(Player player)
         {
-            Battlefield.Battlefield.Instance.transform.position = transform.position;
-            Battlefield.Battlefield.Instance.transform.rotation = transform.rotation;
+            players.Enqueue(player);
         }
-    }
 
-    internal void MovePlayer(Player.ID id, Transform transform)
-    {
-        playerSpots.Add(new PlayerSpot(transform, id));
+        public void SelectBattlefield()
+        {
+            var battlefields = GameObject.FindObjectsOfType<Battlefield>();
+            if (battlefields.Length > 0)
+            {
+                var battlefield = battlefields[UnityEngine.Random.Range(0, battlefields.Length)];
+                battlefield.Build();
+                SetPlayerPosition(Player.ID.A, battlefield.PlayerASlot);
+                SetPlayerPosition(Player.ID.B, battlefield.PlayerBSlot);
+
+                var cameraTransform = Camera.main.transform;
+                cameraTransform.position = battlefield.CameraSlot.position;
+                cameraTransform.rotation = battlefield.CameraSlot.rotation;
+
+                battleFieldSelected.Invoke(battlefield);
+            }
+        }
+
+        private void SetPlayerPosition(Player.ID id, Transform playerSlot)
+        {
+            var player = Player.Get(id);
+            player.transform.position = playerSlot.position;
+            player.transform.rotation = playerSlot.rotation;
+        }
+
+        private IEnumerator MovePlayerCoroutine()
+        {
+            yield return new WaitForEndOfFrame();
+            while (players.Count > 0)
+            {
+                var player = players.Dequeue();
+                foreach (var spot in playerSpots)
+                    spot.Move(player);
+            }
+        }
+
+        internal void MovePlayer(Player.ID id, Transform transform)
+        {
+            playerSpots.Add(new PlayerSpot(transform, id));
+        }
     }
 }

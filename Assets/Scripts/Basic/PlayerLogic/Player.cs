@@ -85,6 +85,7 @@ namespace PlayerLogic
             var spellInstance = spell.SpellObject;
             spellInstance.transform.position = positon;
             spellInstance.transform.rotation = rotation;
+            spellInstance.gameObject.SetActive(true);
             CastEnd.Invoke(index);
             StartCoroutine(Cooldown(spell, index));
         }

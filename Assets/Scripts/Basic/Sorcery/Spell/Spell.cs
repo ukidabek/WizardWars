@@ -43,7 +43,6 @@ namespace Sorcery.Spells
                     if (!List[i].activeSelf)
                     {
                         instance = List[i];
-                        instance.SetActive(true);
                         List.RemoveAt(i);
                         List.Add(instance);
                         break;
