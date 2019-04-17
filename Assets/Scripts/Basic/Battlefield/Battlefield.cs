@@ -7,12 +7,41 @@ using UnityEngine.Events;
 
 namespace Battlefield
 {
-    public abstract class FieldPrefabProvider : MonoBehaviour
-    {
-        public abstract GameObject Field { get; }
-    }
-
     [Serializable] public class FieldSelectedCallback : UnityEvent<Transform> { }
+
+    [Serializable]
+    public class Region
+    {
+        [SerializeField] private string name = string.Empty;
+        public string Name { get => name; }
+
+        [Serializable]
+        public class AxisLimit
+        {
+            [SerializeField] private bool limit = false;
+            public bool Limit { get => limit; }
+
+            [SerializeField] private Vector2Int range = Vector2Int.zero;
+            public Vector2Int Range { get => range; }
+
+            public bool IsInLimit(int v)
+            {
+                if (!limit) return true;
+                return v >= Range.x && v <= (Range.y - 1);
+            }
+        }
+
+        [SerializeField] private AxisLimit xAxisLimit = new AxisLimit();
+        public AxisLimit XAxisLimit { get => xAxisLimit; }
+
+        [SerializeField] private AxisLimit yAxisLimit = new AxisLimit();
+        public AxisLimit YAxisLimit { get => yAxisLimit; }
+
+        public bool IsInLimit(int x, int y)
+        {
+            return xAxisLimit.IsInLimit(x) && yAxisLimit.IsInLimit(y);
+        }
+    }
 
     public class Battlefield : MonoBehaviour
     {
@@ -32,7 +61,12 @@ namespace Battlefield
         [SerializeField] private FieldPrefabProvider provider = null;
 
         [Space] public FieldSelectedCallback FieldSelectedCallback = new FieldSelectedCallback();
-        [SerializeField] private Color gridColor = Color.red;
+        [Space] [SerializeField] private Color gridColor = Color.red;
+        [SerializeField] private Color regionColor = Color.cyan;
+
+        [SerializeField] Region[] regions = null;
+
+        [SerializeField] Region region = new Region();
 
         public void Build()
         {
@@ -46,6 +80,7 @@ namespace Battlefield
                 for (int y = 0; y < size.y; y++)
                 {
                     var field = provider.Field;
+                    field.gameObject.SetActive(false);
                     fields[x, y] = field.GetComponent<Field>();
                     fields[x, y].OnMouseDownCallback += OnMouseDown;
                     field.transform.SetParent(row.transform);
@@ -53,6 +88,8 @@ namespace Battlefield
                     field.transform.localPosition = new Vector3(0, 0, y);
                 }
             }
+
+            ShowFields(region);
         }
 
         private void OnMouseDown(Vector2Int coordinate)
@@ -60,10 +97,20 @@ namespace Battlefield
             FieldSelectedCallback.Invoke(fields[coordinate.x, coordinate.y].FieldTransfomr);
         }
 
+        public void ShowFields(Region region)
+        {
+            for (int x = 0; x < size.x; x++)
+            {
+                for (int y = 0; y < size.y; y++)
+                {
+                    fields[x, y].gameObject.SetActive(region.IsInLimit(x, y));
+                }
+            }
+        }
 
         private void OnValidate()
         {
-            if(playerASlot != null)
+            if (playerASlot != null)
                 playerASlot.transform.localPosition = Vector3.right * (size.x / 2f) + -Vector3.forward * toFieldDistance;
 
             if (playerBSlot != null)
@@ -77,11 +124,16 @@ namespace Battlefield
             Vector3 startPosition = Vector3.zero;
             for (int x = 0; x <= size.x; x++)
             {
+                bool fieldInRegion = region.XAxisLimit.Limit && x >= region.XAxisLimit.Range.x && x <= region.XAxisLimit.Range.y;
+                Gizmos.color = fieldInRegion ? regionColor : gridColor;
+
                 startPosition = transform.position + transform.right * x;
                 Gizmos.DrawLine(startPosition, startPosition + transform.forward * size.y);
             }
             for (int y = 0; y <= size.y; y++)
             {
+                bool fieldInRegion = region.YAxisLimit.Limit && y >= region.YAxisLimit.Range.x && y <= region.YAxisLimit.Range.y;
+                Gizmos.color = fieldInRegion ? regionColor : gridColor;
                 startPosition = transform.position + transform.forward * y;
                 Gizmos.DrawRay(startPosition, transform.right * size.x);
             }

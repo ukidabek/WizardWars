@@ -12,6 +12,11 @@ namespace Battlefield
 
     [Serializable] public class BattleFieldSelectedEvent : UnityEvent<Battlefield> { }
 
+    public interface IBattlefieldUser
+    {
+        void GetBattlefield(Battlefield battlefield);
+    }
+
     public class BattlefieldManager : SingletonMonoBehaviour<BattlefieldManager>
     {
         private class PlayerSpot
@@ -44,7 +49,10 @@ namespace Battlefield
         {
             base.Awake();
             Player.OnPlayerAdded += OnPlayerAdd;
-            StartCoroutine(MovePlayerCoroutine());
+
+            foreach (var item in gameObject.scene.GetRootGameObjects())
+                foreach (var user in item.GetComponentsInChildren<IBattlefieldUser>())
+                    battleFieldSelected.AddListener(user.GetBattlefield);
         }
 
         private void OnPlayerAdd(Player player)

@@ -8,6 +8,7 @@ using UnityEngine.Events;
 
 [Serializable] public class SelectSpellEvent : UnityEvent<int> { }
 
+
 public class SpellHandUIController : MonoBehaviour
 {
     [SerializeField] private Player.ID playerID = Player.ID.A;

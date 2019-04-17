@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 namespace Sorcery.Spells
 {
-    [CreateAssetMenu(fileName = "NewSpell", menuName = "Sorcery/Create Spell")]
+    [CreateAssetMenu(fileName = "NewSpell", menuName = "Sorcery/Spell")]
     public class Spell : ScriptableObject
     {
         public class Pool
@@ -64,6 +64,9 @@ namespace Sorcery.Spells
 
         [SerializeField] private float cost = 5f;
         public float Cost { get => cost; }
+
+        [SerializeField] private SpellType type = null;
+        public SpellType Type { get => type; }
 
         [SerializeField] private GameObject spellObject = null;
         private Pool pool = null;

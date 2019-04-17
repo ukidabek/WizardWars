@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 93ed200d6b0e7f843b545c36a668c28b, type: 3}
   castTime: 1
+  cooldwonTime: 1
   cost: 5
+  type: {fileID: 11400000, guid: 3e11dfc476440554595c2a94ad8f1c1e, type: 2}
   spellObject: {fileID: 6446548090765134275, guid: 6a95bb92463c9814e8804c09e77aa595,
     type: 3}

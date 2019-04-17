@@ -4,8 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PlayerLogic;
+using Battlefield;
 
-public class CastSpellCommandInvoker : CommandInvoker
+public class CastSpellCommandInvoker : CommandInvoker, IBattlefieldUser
 {
     [SerializeField] private Player player = null;  // Change to id.
     [SerializeField] private int index = -1;
@@ -13,16 +14,17 @@ public class CastSpellCommandInvoker : CommandInvoker
     [SerializeField] private Vector3 position = Vector3.zero;
     [SerializeField] private Quaternion rotation = Quaternion.identity;
 
-    protected override Command Command => new CastSpellCommand((int)player.Id, index, position, rotation);
+    [SerializeField] private Battlefield.Battlefield battlefield = null;
 
-    private void Start()
-    {
-        //Battlefield.Battlefield.Instance.FieldSelectedCallback.AddListener(GetTransform);
-    }
+    protected override Command Command => new CastSpellCommand((int)player.Id, index, position, rotation);
 
     public void GetBattlefield(Battlefield.Battlefield battlefield)
     {
+        if (this.battlefield != null)
+            this.battlefield.FieldSelectedCallback.RemoveListener(GetTransform);
+
         battlefield.FieldSelectedCallback.AddListener(GetTransform);
+        this.battlefield = battlefield;
     }
 
     public void GetTransform(Transform transform)

@@ -67,6 +67,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6671726767852792656, guid: 20c6b3afed186484d90d3b13833b37b1,
+        type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 807378577327968922}
     - target: {fileID: 6671726768229202856, guid: 20c6b3afed186484d90d3b13833b37b1,
         type: 3}
       propertyPath: id
@@ -87,11 +92,6 @@ PrefabInstance:
       propertyPath: CastEnd.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 6671726767852792656, guid: 20c6b3afed186484d90d3b13833b37b1,
-        type: 3}
-      propertyPath: player
-      value: 
-      objectReference: {fileID: 807378577327968922}
     - target: {fileID: 6671726767907909817, guid: 20c6b3afed186484d90d3b13833b37b1,
         type: 3}
       propertyPath: animator
