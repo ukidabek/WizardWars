@@ -6,10 +6,10 @@ using UnityEngine.Events;
 
 namespace Battlefield
 {
+    [Serializable] public class OnMouseClick : UnityEvent<Vector2Int> { }
+
     public class Field : MonoBehaviour
     {
-        public event Action<Vector2Int> OnMouseDownCallback = null;
-
         [SerializeField] private MeshRenderer meshRenderer = null;
         [SerializeField] private Transform fieldTransfomr = null;
         public Transform FieldTransfomr
@@ -20,6 +20,7 @@ namespace Battlefield
 
         [Space]
         public UnityEvent OnHoverOn = new UnityEvent();
+        public OnMouseClick OnClick = new OnMouseClick();
         public UnityEvent OnHoverOff = new UnityEvent();
 
         private void Start()
@@ -33,7 +34,7 @@ namespace Battlefield
             vector.y = (int)transform.localPosition.z;
             vector.x = (int)transform.parent.localPosition.x;
             Debug.Log(vector.ToString());
-            OnMouseDownCallback?.Invoke(vector);
+            OnClick.Invoke(vector);
         }
 
         private void OnMouseEnter()

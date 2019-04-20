@@ -13,22 +13,6 @@ public class ArenaManager : SingletonMonoBehaviour<ArenaManager>
 
     public UnityEvent OnSceneLoadedEvent = new UnityEvent();
 
-    protected override void Awake()
-    {
-        base.Awake();
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
-    {
-        OnSceneLoadedEvent.Invoke();
-    }
-
-    private void OnDestroy()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
     private IEnumerator LoadSceneCoroutine(string sceneName)
     {
         Scene scene = SceneManager.GetSceneByName(sceneName);
@@ -46,6 +30,7 @@ public class ArenaManager : SingletonMonoBehaviour<ArenaManager>
         }
         loadedArena = SceneManager.GetSceneByName(sceneName);
         SceneManager.SetActiveScene(loadedArena);
+        OnSceneLoadedEvent.Invoke();
     }
 
     public void AddScene(string name)

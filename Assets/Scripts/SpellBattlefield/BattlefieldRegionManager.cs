@@ -34,5 +34,4 @@ public class BattlefieldRegionManager : SingletonScriptableObject<BattlefieldReg
         pairs.TryGetValue(spellType, out region);
         return region;
     }
-
 }

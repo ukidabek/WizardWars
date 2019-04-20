@@ -1,24 +1,30 @@
 ﻿using Commands;
 using UnityEngine;
 using PlayerLogic;
+using Battlefield;
 
 public class CastSpellCommand : Command
 {
     private int name = 0;
     private int index = 0;
-    private Vector3 positon = Vector3.zero;
-    private Quaternion rotation = Quaternion.identity;
+    private int id;
+    private Vector2Int coordinate;
 
-    public CastSpellCommand(int player, int index, Vector3 positon, Quaternion rotation)
+    public CastSpellCommand(int id, int index, Vector2Int coordinate)
     {
-        this.name = player;
+        this.id = id;
         this.index = index;
-        this.positon = positon;
-        this.rotation = rotation;
+        this.coordinate = coordinate;
+    }
+
+    private Transform GetFieldTransform()
+    {
+        return BattlefieldManager.Instance.SelectedBattlefield.GetField(coordinate).FieldTransfomr;
     }
 
     public override void Execute()
     {
-        Player.Get((Player.ID)name)?.CastSpell(index, positon, rotation);
+        var field = GetFieldTransform();
+        Player.Get((Player.ID)name)?.CastSpell(index, field.position, field.rotation);
     }
 }

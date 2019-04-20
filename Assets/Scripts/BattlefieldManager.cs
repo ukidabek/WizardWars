@@ -9,13 +9,8 @@ using UnityEngine.Events;
 
 namespace Battlefield
 {
-
     [Serializable] public class BattleFieldSelectedEvent : UnityEvent<Battlefield> { }
-
-    public interface IBattlefieldUser
-    {
-        void GetBattlefield(Battlefield battlefield);
-    }
+    [Serializable] public class FieldSelectedCallback : UnityEvent<Transform> { }
 
     public class BattlefieldManager : SingletonMonoBehaviour<BattlefieldManager>
     {
@@ -43,16 +38,18 @@ namespace Battlefield
         private List<PlayerSpot> playerSpots = new List<PlayerSpot>();
         private Queue<Player> players = new Queue<Player>();
 
-        public BattleFieldSelectedEvent battleFieldSelected = new BattleFieldSelectedEvent();
+        [Space]
+        public BattleFieldSelectedEvent BattleFieldSelected = new BattleFieldSelectedEvent();
+        public FieldSelectedCallback FieldSelectedCallback = new FieldSelectedCallback();
+
+        [Space]
+        [SerializeField] private Battlefield selectedBattlefield = null;
+        public Battlefield SelectedBattlefield { get => selectedBattlefield; }
 
         protected override void Awake()
         {
             base.Awake();
             Player.OnPlayerAdded += OnPlayerAdd;
-
-            foreach (var item in gameObject.scene.GetRootGameObjects())
-                foreach (var user in item.GetComponentsInChildren<IBattlefieldUser>())
-                    battleFieldSelected.AddListener(user.GetBattlefield);
         }
 
         private void OnPlayerAdd(Player player)
@@ -65,16 +62,16 @@ namespace Battlefield
             var battlefields = GameObject.FindObjectsOfType<Battlefield>();
             if (battlefields.Length > 0)
             {
-                var battlefield = battlefields[UnityEngine.Random.Range(0, battlefields.Length)];
-                battlefield.Build();
-                SetPlayerPosition(Player.ID.A, battlefield.PlayerASlot);
-                SetPlayerPosition(Player.ID.B, battlefield.PlayerBSlot);
+                selectedBattlefield = battlefields[UnityEngine.Random.Range(0, battlefields.Length)];
+                selectedBattlefield.Build();
+                SetPlayerPosition(Player.ID.A, selectedBattlefield.PlayerASlot);
+                SetPlayerPosition(Player.ID.B, selectedBattlefield.PlayerBSlot);
 
                 var cameraTransform = Camera.main.transform;
-                cameraTransform.position = battlefield.CameraSlot.position;
-                cameraTransform.rotation = battlefield.CameraSlot.rotation;
+                cameraTransform.position = selectedBattlefield.CameraSlot.position;
+                cameraTransform.rotation = selectedBattlefield.CameraSlot.rotation;
 
-                battleFieldSelected.Invoke(battlefield);
+                BattleFieldSelected.Invoke(selectedBattlefield);
             }
         }
 
@@ -99,6 +96,11 @@ namespace Battlefield
         internal void MovePlayer(Player.ID id, Transform transform)
         {
             playerSpots.Add(new PlayerSpot(transform, id));
+        }
+
+        public void HideAllFields()
+        {
+            SelectedBattlefield?.HideAllFields();
         }
     }
 }

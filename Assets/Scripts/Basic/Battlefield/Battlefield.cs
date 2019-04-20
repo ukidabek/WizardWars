@@ -7,8 +7,6 @@ using UnityEngine.Events;
 
 namespace Battlefield
 {
-    [Serializable] public class FieldSelectedCallback : UnityEvent<Transform> { }
-
     [Serializable]
     public class Region
     {
@@ -59,14 +57,14 @@ namespace Battlefield
 
         [Space]
         [SerializeField] private FieldPrefabProvider provider = null;
+        [SerializeField] private Vector2Int selectedFieldCoordinate = Vector2Int.zero;
+        public Vector2Int SelectedFieldCoordinate { get => selectedFieldCoordinate; }
 
-        [Space] public FieldSelectedCallback FieldSelectedCallback = new FieldSelectedCallback();
+        public static event Action<Vector2Int> FieldSelectedCallback = null;
         [Space] [SerializeField] private Color gridColor = Color.red;
         [SerializeField] private Color regionColor = Color.cyan;
 
-        [SerializeField] Region[] regions = null;
-
-        [SerializeField] Region region = new Region();
+        private Region region = new Region();
 
         public void Build()
         {
@@ -82,30 +80,43 @@ namespace Battlefield
                     var field = provider.Field;
                     field.gameObject.SetActive(false);
                     fields[x, y] = field.GetComponent<Field>();
-                    fields[x, y].OnMouseDownCallback += OnMouseDown;
+                    fields[x, y].OnClick.AddListener(OnMouseDown);
                     field.transform.SetParent(row.transform);
                     field.transform.localRotation = Quaternion.identity;
                     field.transform.localPosition = new Vector3(0, 0, y);
                 }
             }
-
-            ShowFields(region);
         }
 
         private void OnMouseDown(Vector2Int coordinate)
         {
-            FieldSelectedCallback.Invoke(fields[coordinate.x, coordinate.y].FieldTransfomr);
+            FieldSelectedCallback?.Invoke(selectedFieldCoordinate = coordinate);
+        }
+
+        private int InvertAxixCoordinate(int size, int coordinate, bool invert)
+        {
+            return invert ? (size - 1) - coordinate : coordinate;
+        }
+
+        public Field GetField(Vector2Int coordinate, bool invertX = false, bool invertY = false)
+        {
+            return fields[InvertAxixCoordinate(size.x, coordinate.x, invertX), InvertAxixCoordinate(size.y, coordinate.y, invertY)];
         }
 
         public void ShowFields(Region region)
         {
+            this.region = region;
             for (int x = 0; x < size.x; x++)
-            {
                 for (int y = 0; y < size.y; y++)
-                {
                     fields[x, y].gameObject.SetActive(region.IsInLimit(x, y));
-                }
-            }
+        }
+
+        public void HideAllFields()
+        {
+            for (int x = 0; x < size.x; x++)
+                for (int y = 0; y < size.y; y++)
+                    if (fields[x, y].gameObject.activeSelf)
+                        fields[x, y].gameObject.SetActive(false);
         }
 
         private void OnValidate()

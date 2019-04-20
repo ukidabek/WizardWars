@@ -6,33 +6,27 @@ using UnityEngine;
 using PlayerLogic;
 using Battlefield;
 
-public class CastSpellCommandInvoker : CommandInvoker, IBattlefieldUser
+public class CastSpellCommandInvoker : CommandInvoker/*, IBattlefieldUser*/
 {
     [SerializeField] private Player player = null;  // Change to id.
     [SerializeField] private int index = -1;
     public int Index { get => index; set => index = value; }
     [SerializeField] private Vector3 position = Vector3.zero;
     [SerializeField] private Quaternion rotation = Quaternion.identity;
+    [SerializeField] private Vector2Int coordinate = Vector2Int.zero;
 
-    [SerializeField] private Battlefield.Battlefield battlefield = null;
+    protected override Command Command => new CastSpellCommand((int)player.Id, index, coordinate);
 
-    protected override Command Command => new CastSpellCommand((int)player.Id, index, position, rotation);
-
-    public void GetBattlefield(Battlefield.Battlefield battlefield)
+    private void Awake()
     {
-        if (this.battlefield != null)
-            this.battlefield.FieldSelectedCallback.RemoveListener(GetTransform);
-
-        battlefield.FieldSelectedCallback.AddListener(GetTransform);
-        this.battlefield = battlefield;
+        Battlefield.Battlefield.FieldSelectedCallback += GetCoordinate;
     }
 
-    public void GetTransform(Transform transform)
+    private void GetCoordinate(Vector2Int coordinate)
     {
-        if(index >= 0)
+        this.coordinate = coordinate;
+        if (index >= 0)
         {
-            position = transform.position;
-            rotation = transform.rotation;
             Invoke();
             index = -1;
         }

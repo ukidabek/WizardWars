@@ -77,11 +77,13 @@ namespace PlayerLogic
         {
             CastStart.Invoke(index);
             var time = spell.CastTime;
+            CastUpdateEvent.Invoke(0f);
             while ((time -= Time.deltaTime) > 0)
             {
                 CastUpdateEvent.Invoke(1 - (time / spell.CastTime));
                 yield return null;
             }
+            CastUpdateEvent.Invoke(1f);
             var spellInstance = spell.SpellObject;
             spellInstance.transform.position = positon;
             spellInstance.transform.rotation = rotation;
