@@ -12,4 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b53247a32f720043ba8da8b1610621e, type: 3}
   m_Name: TypesManager
   m_EditorClassIdentifier: 
-  groups: []
+  groups:
+  - name: Magic
+    types:
+    - Fire
+    - Deth
+  - name: Resources
+    types:
+    - Fire
+    - Deth
